@@ -1,31 +1,160 @@
 apply plugin: 'com.android.application'
 
+//buildscript {
+//    repositories {
+//        maven { url 'https://maven.fabric.io/public' }
+//    }
+//
+//    dependencies {
+//        classpath 'io.fabric.tools:gradle:1+'
+//    }
+//}
+apply plugin: 'realm-android'
+//apply plugin: 'io.fabric'
+
+//repositories {
+//    maven { url 'apply plugin: \'io.fabric\'' }
+//}
+
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.google.com" }
+        maven {
+            url 'https://github.com/yanzm/LoopViewPager/raw/master/maven-repo'
+        }
+        maven { url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo' }
+    }
+}
+
 android {
-    compileSdkVersion 28
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
         applicationId "com.example.gem.reviewandroidcode"
-        minSdkVersion 19
-        targetSdkVersion 28
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a', "x86"
+        }
     }
+
+    flavorDimensions "id"
+
+//    signingConfigs {
+//        release {
+//            storeFile file("keystore/pamlo_keystore")
+//            storePassword '123456a@'
+//            keyAlias 'pamlo_android'
+//            keyPassword '123456a@'
+//        }
+//    }
+
     buildTypes {
         release {
+            shrinkResources false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    productFlavors {
+        staging {
+            dimension "id"
+            applicationId "com.example.gem.reviewandroidcode.staging"
+            buildConfigField 'String', 'BASE_URL', '"http://172.16.10.124:8082/api/v1/"'
+            buildConfigField 'String', 'HOST_ADDRESS', '"http://172.16.10.124:2480/"'
+            buildConfigField 'int', 'AR_EXPIRED_PERIOD', '1'
+        }
+        qa {
+            dimension "id"
+            applicationId "com.example.gem.reviewandroidcode"
+            buildConfigField 'String', 'BASE_URL', '"http://14.177.235.12:2480/api/v1/"'
+            buildConfigField 'String', 'HOST_ADDRESS', '"http://14.177.235.12:2480/"'
+            buildConfigField 'int', 'AR_EXPIRED_PERIOD', '1'
+//            signingConfig signingConfigs.release
+        }
+        live {
+            dimension "id"
+            applicationId "com.example.gem.reviewandroidcode"
+            buildConfigField 'String', 'BASE_URL', '"https://app.pamlo.net/api/v1/"'
+            buildConfigField 'String', 'HOST_ADDRESS', '"https://app.pamlo.net/"'
+            buildConfigField 'int', 'AR_EXPIRED_PERIOD', '7'
+//            signingConfig signingConfigs.release
+        }
+    }
+
+    dexOptions {
+        preDexLibraries = false
+        javaMaxHeapSize '4g'
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    configurations.all {
+        resolutionStrategy.force "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+        resolutionStrategy.force "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+        resolutionStrategy.force "com.android.support:support-compat:${rootProject.ext.supportLibVersion}"
+        resolutionStrategy.force "com.android.support:support-core-ui:${rootProject.ext.supportLibVersion}"
+        resolutionStrategy.force "com.android.support:support-fragment:${rootProject.ext.supportLibVersion}"
+        resolutionStrategy.force "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+//    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+//        transitive = true
+//    }
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:cardview-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'org.greenrobot:eventbus:3.1.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    // retrofit
+    implementation "com.squareup.retrofit2:retrofit:${rootProject.ext.retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-gson:${rootProject.ext.retrofitVersion}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${rootProject.ext.retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-scalars:${rootProject.ext.retrofitVersion}"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+//    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
     implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'net.danlew:android.joda:2.9.3.1'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.facebook.fresco:fresco:1.10.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.malinskiy:superrecyclerview:1.1.4'
+    implementation 'com.github.barteksc:android-pdf-viewer:3.1.0-beta.1'
+
+    // exoplayer
+    implementation "com.google.android.exoplayer:exoplayer-core:${rootProject.ext.exoPlayerVersion}"
+    implementation "com.google.android.exoplayer:exoplayer-hls:${rootProject.ext.exoPlayerVersion}"
+    implementation "com.google.android.exoplayer:exoplayer-dash:${rootProject.ext.exoPlayerVersion}"
+    implementation "com.google.android.exoplayer:exoplayer-ui:${rootProject.ext.exoPlayerVersion}"
+    implementation "com.google.android.exoplayer:extension-ima:${rootProject.ext.exoPlayerVersion}"
 }
