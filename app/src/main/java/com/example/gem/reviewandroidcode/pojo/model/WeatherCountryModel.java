@@ -1,6 +1,7 @@
 package com.example.gem.reviewandroidcode.pojo.model;
 
 import com.example.gem.reviewandroidcode.pojo.dto.WeatherCountryDTO;
+import com.example.gem.reviewandroidcode.pojo.dto.WeatherDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,17 @@ public class WeatherCountryModel {
   }
 
   public void convert(WeatherCountryDTO dto) {
-    // TOTO
+    if (dto.coordDTO != null)
+      coordModel.convert(dto.coordDTO);
+
+    if (dto.weatherDTOS != null && !dto.weatherDTOS.isEmpty())
+      for (WeatherDTO item : dto.weatherDTOS) {
+        WeatherModel model = new WeatherModel();
+        model.convert(item);
+        weatherModels.add(model);
+      }
+
+//      if (base != null && !)
   }
 
   public CoordModel getCoordModel() {
