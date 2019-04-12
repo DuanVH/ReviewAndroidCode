@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ReviewAndroidCode</string>
+    <string name="player_default_error">There was an error while playing this content. Please try again later.</string>
 </resources>

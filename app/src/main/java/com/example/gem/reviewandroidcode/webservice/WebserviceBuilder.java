@@ -18,7 +18,7 @@ public class WebserviceBuilder {
 
   private static WebserviceBuilder mInstance;
 
-  public static WebserviceBuilder getmInstance() {
+  public static WebserviceBuilder getInstance() {
     synchronized (WebserviceBuilder.class) {
       if (mInstance == null) mInstance = new WebserviceBuilder();
     }

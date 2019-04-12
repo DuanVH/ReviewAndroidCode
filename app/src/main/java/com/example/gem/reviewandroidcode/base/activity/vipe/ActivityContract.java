@@ -1,6 +1,7 @@
 package com.example.gem.reviewandroidcode.base.activity.vipe;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 
 import io.reactivex.disposables.Disposable;
 
@@ -19,6 +20,8 @@ public interface ActivityContract {
     P getPresenter();
 
     void showMessage(String message);
+
+    void showMessage(@StringRes int stringResId);
 
     void showLoadingDialog();
 

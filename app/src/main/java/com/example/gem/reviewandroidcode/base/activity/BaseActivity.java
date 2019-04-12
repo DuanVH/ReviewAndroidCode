@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -102,6 +103,11 @@ public abstract class BaseActivity<P extends ActivityContract.Presenter> extends
   @Override
   public void showMessage(String message) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void showMessage(@StringRes int stringResId) {
+    Toast.makeText(this, stringResId, Toast.LENGTH_SHORT).show();
   }
 
   @Override
