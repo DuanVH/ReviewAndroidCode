@@ -48,7 +48,8 @@ public class ArContentDTO extends RealmObject {
   public long detectedDate;
 
   public boolean isDownloadNeeded() {
-    return ArContentDatabase.checkIfDownloadNeeded(id, modified);
+//    return ArContentDatabase.checkIfDownloadNeeded(id, modified);
+    return true;
   }
 
   public long getDownloadSize() {

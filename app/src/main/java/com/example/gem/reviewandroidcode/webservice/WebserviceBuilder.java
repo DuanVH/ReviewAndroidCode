@@ -1,6 +1,7 @@
 package com.example.gem.reviewandroidcode.webservice;
 
 import com.example.gem.reviewandroidcode.BuildConfig;
+import com.example.gem.reviewandroidcode.webservice.weather.WeatherService;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +18,8 @@ public class WebserviceBuilder {
   private static final int READ_TIME_OUT = 15000;
 
   private static WebserviceBuilder mInstance;
+
+  private WeatherService weatherService;
 
   public static WebserviceBuilder getInstance() {
     synchronized (WebserviceBuilder.class) {
@@ -52,5 +55,10 @@ public class WebserviceBuilder {
         .build();
 
     // TODO
+    weatherService = retrofit.create(WeatherService.class);
+  }
+
+  public WeatherService getWeatherService() {
+    return weatherService;
   }
 }

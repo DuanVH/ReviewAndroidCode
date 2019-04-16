@@ -1,9 +1,14 @@
 package com.example.gem.reviewandroidcode;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
 import android.media.MediaActionSound;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Printer;
 import android.widget.ImageView;
 
 import butterknife.BindView;
@@ -15,15 +20,15 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getName();
 
   @BindView(R.id.ivMenu)
-  ImageView mIv1;
+  ImageView mMenuIv;
   @BindView(R.id.ivBack)
-  ImageView mIv2;
+  ImageView mBackIv;
   @BindView(R.id.ivPlay)
-  ImageView mIv3;
+  ImageView mPlayIv;
   @BindView(R.id.ivPause)
-  ImageView mIv4;
+  ImageView mPauseIv;
   @BindView(R.id.ivCircle)
-  ImageView mIv5;
+  ImageView mCircleIv;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,67 @@ public class MainActivity extends AppCompatActivity {
     Log.e(TAG, "onCreate: ");
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
+
+    // TODO
+    Animal dog = new Dog();  /*Con cho la Dong vat*/
+    ((Dog) dog).makeNoise();
+    Animal dog1 = new Dog();  // Up casting
+    dog1.run();
+    dog1.runAnimal();
+    ((Dog) dog1).runDog();  // down casting
+    /* Chi */
+  }
+
+  interface Action {
+    int a = 0;
+    String str = "";
+    void makeNoise();
+    void makeNoise1();
+    void makeNoise2();
+  }
+
+  abstract class Animal {
+    abstract void eat();
+
+    public void run() {
+      Log.e("DUAN_LOG", "run animal");
+    }
+
+    public void runAnimal() {
+      Log.e("DUAN_LOG", "run...aaa");
+    }
+  }
+
+  class Dog extends Animal implements Action {
+
+    @Override
+    public void run() {
+      Log.e("DUAN_LOG", "run dog");
+    }
+
+    @Override
+    void eat() {
+      Log.e("DUAN_LOG", "eat: ");
+    }
+
+    public void runDog() {
+      Log.e("DUAN_LOG", "run...ddd");
+    }
+
+    @Override
+    public void makeNoise() {
+      Log.e("DUAN_LOG", "makeNoise " + a);
+    }
+
+    @Override
+    public void makeNoise1() {
+
+    }
+
+    @Override
+    public void makeNoise2() {
+
+    }
   }
 
   @Override
@@ -87,4 +153,5 @@ public class MainActivity extends AppCompatActivity {
   public void onCircleClick() {
     Log.e(TAG, "onCircleClick: ");
   }
+
 }
