@@ -1,15 +1,17 @@
 package com.example.gem.reviewandroidcode;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.media.MediaActionSound;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Printer;
+import android.widget.EditText;
 import android.widget.ImageView;
+
+import com.example.gem.reviewandroidcode.dbsqlite.DatabaseManager;
+import com.example.gem.reviewandroidcode.pojo.Student;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,6 +21,14 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getName();
 
+  @BindView(R.id.edt_id)
+  EditText mIdEdt;
+  @BindView(R.id.edt_name)
+  EditText mNameEdt;
+  @BindView(R.id.edt_address)
+  EditText mAddressEdt;
+  @BindView(R.id.edt_phone)
+  EditText mPhoneEdt;
   @BindView(R.id.ivMenu)
   ImageView mMenuIv;
   @BindView(R.id.ivBack)
@@ -30,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
   @BindView(R.id.ivCircle)
   ImageView mCircleIv;
 
+  private int id;
+  private String name;
+  private String address;
+  private String numPhone;
+  private DatabaseManager mDatabaseManager;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -37,7 +53,20 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
 
+    mDatabaseManager = new DatabaseManager(this);
+    initViews();
+
+//    int x = 9/0;
+//    double y = (float) x;
+
     // TODO
+//    Dog d = new Animal();
+    Integer a = new Integer(2);
+    Integer b = new Integer(2);
+    if (a == b)
+      Log.e(TAG, "onCreate: bang nhau");
+    else
+      Log.e(TAG, "onCreate: khong bang nhau");
     Animal dog = new Dog();  /*Con cho la Dong vat*/
     ((Dog) dog).makeNoise();
     Animal dog1 = new Dog();  // Up casting
@@ -47,16 +76,43 @@ public class MainActivity extends AppCompatActivity {
     /* Chi */
   }
 
+  private void initViews() {
+    ArrayList<String> oldTexts = new ArrayList<>();
+    mIdEdt.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        Log.e("DUAN_LOG", "afterTextChanged: " + s.toString());
+//        new Sea
+//        oldTexts.add(s.toString());
+      }
+    });
+  }
+
   interface Action {
     int a = 0;
     String str = "";
+
     void makeNoise();
+
     void makeNoise1();
+
     void makeNoise2();
   }
 
-  abstract class Animal {
-    abstract void eat();
+  class Animal {
+    void eat() {
+
+    }
 
     public void run() {
       Log.e("DUAN_LOG", "run animal");
@@ -141,12 +197,17 @@ public class MainActivity extends AppCompatActivity {
 
   @OnClick(R.id.ivPlay)
   public void onPlayClick() {
-    Log.e(TAG, "onPlayClick: ");
+    id = Integer.parseInt(mIdEdt.getText().toString());
+    name = mNameEdt.getText().toString();
+    address = mAddressEdt.getText().toString();
+    numPhone = mPhoneEdt.getText().toString();
+    Student student = new Student(id, name, address, numPhone);
+    mDatabaseManager.addStudent(student);
   }
 
   @OnClick(R.id.ivPause)
   public void onPauseClick() {
-    Log.e(TAG, "onPauseClick: ");
+    Log.e(TAG, "onPauseClick: " + mDatabaseManager.getStudent(1).getName());
   }
 
   @OnClick(R.id.ivCircle)
